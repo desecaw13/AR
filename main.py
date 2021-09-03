@@ -81,14 +81,14 @@ def openC():
             zipcode_e.delete(0, END)
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
-        summit_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
+        summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
 
         def iBack():
             cw.deiconify()
             w.destroy()
 
         back_b = Button(f, fg='white', bg='#d30000', text='Back to Customer Menu', command=iBack)
-        back_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
+        back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         w.update()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -128,6 +128,62 @@ def openP():
     pw.title('Products')
     pw.grid_columnconfigure(0, weight=1)
 
+    def openI():
+        pw.withdraw()
+
+        w = Toplevel(pw, takefocus=True)
+        w.title('Create New Product')
+        w.resizable(width=False, height=False)
+
+        f = Frame(w, bg='#808080')
+        f.grid()
+
+        pid_l = Label(f, text='Product Code')
+        pid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+        pid_e = Entry(f)
+        pid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+
+        title_l = Label(f, text='Title')
+        title_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        title_e = Entry(f)
+        title_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+
+        mingrade_l = Label(f, text='Date Purchased')
+        mingrade_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        mingrade_e = Entry(f)
+        mingrade_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5)
+
+        maxgrade_l = Label(f, text='Date Purchased')
+        maxgrade_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        maxgrade_e = Entry(f)
+        maxgrade_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
+
+        price_l = Label(f, text='Price $')
+        price_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        price_e = Entry(f)
+        price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
+
+        def do():
+            mysql.insertProduct(pid_e.get(), title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
+            pid_e.delete(0, END)
+            title_e.delete(0, END)
+            mingrade_e.delete(0, END)
+            maxgrade_e.delete(0, END)
+            price_e.delete(0, END)
+
+        summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
+        summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
+
+        def iBack():
+            pw.deiconify()
+            w.destroy()
+
+        back_b = Button(f, fg='white', bg='#d30000', text='Back to Products Menu', command=iBack)
+        back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
+
+        w.update()
+        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+
     pt_f = Frame(pw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     pt_f.grid_columnconfigure(0, weight=1)
     pt_f.grid(row=0, column=0, sticky=EW)
@@ -138,7 +194,7 @@ def openP():
     pm_f = Frame(pw, bg='#808080')
     pm_f.grid(row=1, column=0)
 
-    new_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Product', command=lambda: print('np'))  # mysql
+    new_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Product', command=openI)
     new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
     edit_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Product', command=lambda: print('ep'))  # mysql
@@ -167,7 +223,7 @@ def openS():
         sw.withdraw()
 
         w = Toplevel(sw, takefocus=True)
-        w.title('Create New Customer')
+        w.title('Create New Sale')
         w.resizable(width=False, height=False)
 
         f = Frame(w, bg='#808080')
@@ -201,14 +257,14 @@ def openS():
             price_e.delete(0, END)
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
-        summit_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
+        summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
 
         def iBack():
             sw.deiconify()
             w.destroy()
 
         back_b = Button(f, fg='white', bg='#d30000', text='Back to Sales Menu', command=iBack)
-        back_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
+        back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         w.update()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -261,15 +317,18 @@ def openR():
     cr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Customers', command=lambda: print('cr'))  # mysql
     cr_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
-    psr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Product Sales', command=lambda: print('psr'))  # mysql
-    psr_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    pr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Products', command=lambda: print('pr'))  # mysql
+    pr_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+
+    sr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Sales', command=lambda: print('sr'))  # mysql
+    sr_b.grid(row=0, column=2, sticky=EW, padx=5, pady=5)
 
     def Back():
         root.deiconify()
         rw.destroy()
 
     re_b = Button(rm_f, fg='white', bg='#d30000', width=20, height=3, text='Return to Menu', command=Back)
-    re_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
+    re_b.grid(row=1, columnspan=3, sticky=EW, padx=5, pady=5)
 
     rw.update()
     rw.geometry(f'{rw.winfo_width()}x{rw.winfo_height()}+{(rw.winfo_screenwidth() - rw.winfo_width()) // 2}+{(rw.winfo_screenheight() - rw.winfo_height()) // 2}')
