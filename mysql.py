@@ -49,22 +49,27 @@ def insertSale(pID, cID, date, price):
     con.close()
 
 
-# def viewCustomers():
-#     con = sqlite3.connect(dbName)
-#
-#     squery = f'''
-#         SELECT * FROM Customers
-# '''
-#     view = con.execute(squery)
-#
-#     con.commit()
-#     con.close()
-#
-#     return view
+def getCustomer(cID):
+    cur = sqlite3.connect(dbName).cursor()
+
+    c = cur.execute(f'SELECT * FROM Customers WHERE cID={cID}')
+
+    return c.fetchall()
+
+
+def viewTable(table):
+    cur = sqlite3.connect(dbName).cursor()
+
+    view = cur.execute(f'SELECT * FROM {table}')
+
+    return view.fetchall()
+
+
+def edit():
+    pass
 
 
 con = sqlite3.connect(dbName)
-cur = con.cursor()
 
 con.execute('''
     CREATE TABLE IF NOT EXISTS Customers(

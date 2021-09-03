@@ -9,14 +9,14 @@ import mysql
 def openC():
     root.withdraw()
 
-    cw = Toplevel(root, takefocus=True)
+    cw = Toplevel(root)
     cw.title('Customers')
     cw.grid_columnconfigure(0, weight=1)
 
     def openI():
         cw.withdraw()
 
-        w = Toplevel(cw, takefocus=True)
+        w = Toplevel(cw)
         w.title('Create New Customer')
         w.resizable(width=False, height=False)
 
@@ -91,6 +91,7 @@ def openC():
         back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         w.update()
+        w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
 
     ct_f = Frame(cw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
@@ -117,6 +118,7 @@ def openC():
     ce_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
 
     cw.update()
+    cw.focus_force()
     cw.geometry(f'{cw.winfo_width()}x{cw.winfo_height()}+{(cw.winfo_screenwidth() - cw.winfo_width()) // 2}+{(cw.winfo_screenheight() - cw.winfo_height()) // 2}')
     cw.minsize(width=cw.winfo_width(), height=cw.winfo_height())
 
@@ -131,7 +133,7 @@ def openP():
     def openI():
         pw.withdraw()
 
-        w = Toplevel(pw, takefocus=True)
+        w = Toplevel(pw)
         w.title('Create New Product')
         w.resizable(width=False, height=False)
 
@@ -182,6 +184,7 @@ def openP():
         back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         w.update()
+        w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
 
     pt_f = Frame(pw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
@@ -208,6 +211,7 @@ def openP():
     pe_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
 
     pw.update()
+    pw.focus_force()
     pw.geometry(f'{pw.winfo_width()}x{pw.winfo_height()}+{(pw.winfo_screenwidth() - pw.winfo_width()) // 2}+{(pw.winfo_screenheight() - pw.winfo_height()) // 2}')
     pw.minsize(width=pw.winfo_width(), height=pw.winfo_height())
 
@@ -222,7 +226,7 @@ def openS():
     def openI():
         sw.withdraw()
 
-        w = Toplevel(sw, takefocus=True)
+        w = Toplevel(sw)
         w.title('Create New Sale')
         w.resizable(width=False, height=False)
 
@@ -267,6 +271,7 @@ def openS():
         back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         w.update()
+        w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
 
     st_f = Frame(sw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
@@ -293,6 +298,7 @@ def openS():
     se_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
 
     sw.update()
+    sw.focus_force()
     sw.geometry(f'{sw.winfo_width()}x{sw.winfo_height()}+{(sw.winfo_screenwidth() - sw.winfo_width()) // 2}+{(sw.winfo_screenheight() - sw.winfo_height()) // 2}')
     sw.minsize(width=sw.winfo_width(), height=sw.winfo_height())
 
@@ -304,6 +310,50 @@ def openR():
     rw.title('Views')
     rw.grid_columnconfigure(0, weight=1)
 
+    def openV(what):
+        rw.withdraw()
+
+        w = Toplevel(rw)
+        w.title(f'Viewing {what}')
+        w.resizable(width=False, height=False)
+
+        f_f = Frame(w, bg='#808080')
+        f_f.grid(ipadx=5, ipady=5)
+        f_f.grid_columnconfigure(0, weight=1)
+        f_f.grid_rowconfigure(0, weight=1)
+        f = Frame(f_f, bg='#808080', bd=1, relief='solid')
+        f.grid()
+
+        tv = mysql.viewTable(what)
+
+        fields = {
+            'Customers': ['customer code', 'first name', 'last name', 'email', 'phone', 'address', 'state', 'city', 'zipcode'],
+            'Products': ['product code', 'title', 'min grade', 'max grade', 'price'],
+            'Sales': ['product code', 'customer code', 'date', 'price paid']
+        }[what]
+
+        for i in range(len(fields)):
+            Label(f, relief='solid', bd=1, bg='#7F7F7F', text=fields[i]).grid(row=0, column=i, sticky=EW)
+
+        for r in range(len(tv)):
+            for c in range(len(tv[r])):
+                bg = '#A0A0A0' if r % 2 == 0 else '#606060'
+                Label(f, relief='solid', bd=1, bg=bg, text=tv[r][c]).grid(row=r+1, column=c, sticky=EW)
+
+        def iBack():
+            rw.deiconify()
+            w.destroy()
+
+        b_f = Frame(w, bg='#808080')
+        b_f.grid(row=1, sticky=EW)
+        b_f.grid_columnconfigure(0, weight=1)
+        back_b = Button(b_f, fg='white', bg='#d30000', text='Back to Sales Menu', command=iBack)
+        back_b.grid(pady=5)
+
+        w.update()
+        w.focus_force()
+        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+
     rt_f = Frame(rw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     rt_f.grid_columnconfigure(0, weight=1)
     rt_f.grid(row=0, column=0, sticky=EW)
@@ -314,13 +364,13 @@ def openR():
     rm_f = Frame(rw, bg='#808080')
     rm_f.grid(row=1, column=0)
 
-    cr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Customers', command=lambda: print('cr'))  # mysql
+    cr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Customers', command=lambda: openV('Customers'))
     cr_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
-    pr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Products', command=lambda: print('pr'))  # mysql
+    pr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Products', command=lambda: openV('Products'))
     pr_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
-    sr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Sales', command=lambda: print('sr'))  # mysql
+    sr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Sales', command=lambda: openV('Sales'))
     sr_b.grid(row=0, column=2, sticky=EW, padx=5, pady=5)
 
     def Back():
@@ -331,6 +381,7 @@ def openR():
     re_b.grid(row=1, columnspan=3, sticky=EW, padx=5, pady=5)
 
     rw.update()
+    rw.focus_force()
     rw.geometry(f'{rw.winfo_width()}x{rw.winfo_height()}+{(rw.winfo_screenwidth() - rw.winfo_width()) // 2}+{(rw.winfo_screenheight() - rw.winfo_height()) // 2}')
     rw.minsize(width=rw.winfo_width(), height=rw.winfo_height())
 
@@ -340,12 +391,12 @@ if __name__ == '__main__':
     root.title('Accounts Receivable')
     root.grid_columnconfigure(0, weight=1)
 
-    title_f = Frame(root, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
-    title_f.grid_columnconfigure(0, weight=1)
-    title_f.grid(row=0, column=0, sticky=EW)
+    head_f = Frame(root, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
+    head_f.grid_columnconfigure(0, weight=1)
+    head_f.grid(row=0, column=0, sticky=EW)
 
-    title_l = Label(title_f, fg='white', bg='#3D3D3D', font=('TkDefaultFont', 16), text='Customer Sales')
-    title_l.grid(padx=5, pady=5)
+    head_l = Label(head_f, fg='white', bg='#3D3D3D', font=('TkDefaultFont', 16), text='Customer Sales')
+    head_l.grid(padx=5, pady=5)
 
     menu_f = Frame(root, bg='#808080')
     menu_f.grid(row=1, column=0)
