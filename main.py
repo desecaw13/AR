@@ -3,6 +3,7 @@
 # 8/30/2021 - 9/3/2021
 
 from tkinter import *
+from tkinter import messagebox
 import mysql
 
 
@@ -23,54 +24,48 @@ def openC():
         f = Frame(w, bg='#808080')
         f.grid()
 
-        cid_l = Label(f, text='Customer Code')
-        cid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        cid_e = Entry(f)
-        cid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
-
         fname_l = Label(f, text='First Name')
-        fname_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        fname_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
         fname_e = Entry(f)
-        fname_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+        fname_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         lname_l = Label(f, text='Last Name')
-        lname_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        lname_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
         lname_e = Entry(f)
-        lname_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5)
+        lname_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
 
         email_l = Label(f, text='Email Address')
-        email_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        email_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
         email_e = Entry(f)
-        email_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
+        email_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5)
 
         phone_l = Label(f, text='Phone Number')
-        phone_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        phone_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
         phone_e = Entry(f)
-        phone_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
+        phone_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
 
         address_l = Label(f, text='Mailing Address')
-        address_l.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
+        address_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
         address_e = Entry(f)
-        address_e.grid(row=5, column=1, sticky=EW, padx=5, pady=5)
+        address_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
 
         state_l = Label(f, text='State')
-        state_l.grid(row=6, column=0, sticky=EW, padx=5, pady=5)
+        state_l.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
         state_e = Entry(f)
-        state_e.grid(row=6, column=1, sticky=EW, padx=5, pady=5)
+        state_e.grid(row=5, column=1, sticky=EW, padx=5, pady=5)
 
         city_l = Label(f, text='City')
-        city_l.grid(row=7, column=0, sticky=EW, padx=5, pady=5)
+        city_l.grid(row=6, column=0, sticky=EW, padx=5, pady=5)
         city_e = Entry(f)
-        city_e.grid(row=7, column=1, sticky=EW, padx=5, pady=5)
+        city_e.grid(row=6, column=1, sticky=EW, padx=5, pady=5)
 
         zipcode_l = Label(f, text='Zip Code')
-        zipcode_l.grid(row=8, column=0, sticky=EW, padx=5, pady=5)
+        zipcode_l.grid(row=7, column=0, sticky=EW, padx=5, pady=5)
         zipcode_e = Entry(f)
-        zipcode_e.grid(row=8, column=1, sticky=EW, padx=5, pady=5)
+        zipcode_e.grid(row=7, column=1, sticky=EW, padx=5, pady=5)
 
         def do():
-            mysql.insertCustomer(cid_e.get(), fname_e.get(), lname_e.get(), email_e.get(), phone_e.get(), address_e.get(), state_e.get(), city_e.get(), zipcode_e.get())
-            cid_e.delete(0, END)
+            mysql.insertCustomer(fname_e.get(), lname_e.get(), email_e.get(), phone_e.get(), address_e.get(), state_e.get(), city_e.get(), zipcode_e.get())
             fname_e.delete(0, END)
             lname_e.delete(0, END)
             email_e.delete(0, END)
@@ -79,8 +74,81 @@ def openC():
             state_e.delete(0, END)
             city_e.delete(0, END)
             zipcode_e.delete(0, END)
+            messagebox.showinfo('Created', 'A customer was made.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
+        summit_b.grid(row=8, column=1, sticky=EW, padx=5, pady=5)
+
+        def iBack():
+            cw.deiconify()
+            w.destroy()
+
+        back_b = Button(f, fg='white', bg='#d30000', text='Back to Customer Menu', command=iBack)
+        back_b.grid(row=8, column=0, sticky=EW, padx=5, pady=5)
+
+        w.update()
+        w.focus_force()
+        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+
+    def openE():
+        cw.withdraw()
+        cid = None
+
+        w = Toplevel(cw)
+        w.title('Edit Existing Customer')
+        w.resizable(width=False, height=False)
+
+        f = Frame(w, bg='#808080')
+        f.grid()
+
+        cid_l = Label(f, text='Customer Code')
+        cid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5, columnspan=3)
+
+        fname_l = Label(f, text='First Name')
+        fname_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        fname_e = Entry(f)
+        fname_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        lname_l = Label(f, text='Last Name')
+        lname_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        lname_e = Entry(f)
+        lname_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        email_l = Label(f, text='Email Address')
+        email_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        email_e = Entry(f)
+        email_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        phone_l = Label(f, text='Phone Number')
+        phone_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        phone_e = Entry(f)
+        phone_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        address_l = Label(f, text='Mailing Address')
+        address_l.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
+        address_e = Entry(f)
+        address_e.grid(row=5, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        state_l = Label(f, text='State')
+        state_l.grid(row=6, column=0, sticky=EW, padx=5, pady=5)
+        state_e = Entry(f)
+        state_e.grid(row=6, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        city_l = Label(f, text='City')
+        city_l.grid(row=7, column=0, sticky=EW, padx=5, pady=5)
+        city_e = Entry(f)
+        city_e.grid(row=7, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        zipcode_l = Label(f, text='Zip Code')
+        zipcode_l.grid(row=8, column=0, sticky=EW, padx=5, pady=5)
+        zipcode_e = Entry(f)
+        zipcode_e.grid(row=8, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        def do():
+            mysql.updateCustomer(cid, fname_e.get(), lname_e.get(), email_e.get(), phone_e.get(), address_e.get(), state_e.get(), city_e.get(), zipcode_e.get())
+            messagebox.showinfo('Changed', 'A customer was edited.')
+
+        summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
         summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
 
         def iBack():
@@ -90,6 +158,52 @@ def openC():
         back_b = Button(f, fg='white', bg='#d30000', text='Back to Customer Menu', command=iBack)
         back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
+        def remove():
+            mysql.deleteCustomer(cid)
+            messagebox.showinfo('Deleted', 'A customer was removed.')
+            iBack()
+
+        delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Customer', command=remove)
+        delete_b.grid(row=9, column=2, sticky=EW, padx=5, pady=5)
+
+        iw = Toplevel(root)
+
+        wcid_l = Label(iw, text='Customer Code')
+        wcid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+        wcid_e = Entry(iw)
+        wcid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+
+        def enable():
+            c = mysql.getCustomer(wcid_e.get())[0]
+            cid_l.configure(text=f'Customer Code: {wcid_e.get()}')
+            nonlocal cid
+            cid = c[0]
+            fname_e.insert(0, c[1])
+            lname_e.insert(0, c[2])
+            email_e.insert(0, c[3])
+            phone_e.insert(0, c[4])
+            address_e.insert(0, c[5])
+            state_e.insert(0, c[6])
+            city_e.insert(0, c[7])
+            zipcode_e.insert(0, c[8])
+            w.deiconify()
+            iw.destroy()
+
+        grab_b = Button(iw, fg='white', bg='#d33d00', text='Get Customer to edit', command=enable)
+        grab_b.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+
+        def iiBack():
+            iw.destroy()
+            iBack()
+
+        ib_b = Button(iw, fg='white', bg='#d30000', text='Back to Customer Menu', command=iiBack)
+        ib_b.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+
+        iw.update()
+        iw.focus_force()
+        iw.geometry(f'{iw.winfo_width()}x{iw.winfo_height()}+{(iw.winfo_screenwidth() - iw.winfo_width()) // 2}+{(iw.winfo_screenheight() - iw.winfo_height()) // 2}')
+
+        w.withdraw()
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -107,7 +221,7 @@ def openC():
     new_b = Button(cm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Customer', command=openI)
     new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
-    edit_b = Button(cm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Customer', command=lambda: print('ec'))  # mysql
+    edit_b = Button(cm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Customer', command=openE)
     edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
     def Back():
@@ -140,49 +254,138 @@ def openP():
         f = Frame(w, bg='#808080')
         f.grid()
 
-        pid_l = Label(f, text='Product Code')
-        pid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        pid_e = Entry(f)
-        pid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
-
         title_l = Label(f, text='Title')
-        title_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        title_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
         title_e = Entry(f)
-        title_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+        title_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         mingrade_l = Label(f, text='Date Purchased')
-        mingrade_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        mingrade_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
         mingrade_e = Entry(f)
-        mingrade_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5)
+        mingrade_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
 
         maxgrade_l = Label(f, text='Date Purchased')
-        maxgrade_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        maxgrade_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
         maxgrade_e = Entry(f)
-        maxgrade_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
+        maxgrade_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5)
 
         price_l = Label(f, text='Price $')
-        price_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        price_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
         price_e = Entry(f)
-        price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
+        price_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
 
         def do():
-            mysql.insertProduct(pid_e.get(), title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
-            pid_e.delete(0, END)
+            mysql.insertProduct(title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
             title_e.delete(0, END)
             mingrade_e.delete(0, END)
             maxgrade_e.delete(0, END)
             price_e.delete(0, END)
+            messagebox.showinfo('Created', 'A product was made.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
-        summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
+        summit_b.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
 
         def iBack():
             pw.deiconify()
             w.destroy()
 
-        back_b = Button(f, fg='white', bg='#d30000', text='Back to Products Menu', command=iBack)
-        back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
+        back_b = Button(f, fg='white', bg='#d30000', text='Back to Product Menu', command=iBack)
+        back_b.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
 
+        w.update()
+        w.focus_force()
+        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+
+    def openE():
+        pw.withdraw()
+        pid = None
+
+        w = Toplevel(pw)
+        w.title('Edit Existing Product')
+        w.resizable(width=False, height=False)
+
+        f = Frame(w, bg='#808080')
+        f.grid()
+
+        pid_l = Label(f, text='Product Code')
+        pid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5, columnspan=3)
+
+        title_l = Label(f, text='Title')
+        title_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        title_e = Entry(f)
+        title_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        mingrade_l = Label(f, text='Date Purchased')
+        mingrade_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        mingrade_e = Entry(f)
+        mingrade_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        maxgrade_l = Label(f, text='Date Purchased')
+        maxgrade_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        maxgrade_e = Entry(f)
+        maxgrade_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        price_l = Label(f, text='Price $')
+        price_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        price_e = Entry(f)
+        price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        def do():
+            mysql.updateProduct(pid, title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
+            messagebox.showinfo('Changed', 'A Product was edited.')
+
+        summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
+        summit_b.grid(row=5, column=1, sticky=EW, padx=5, pady=5)
+
+        def iBack():
+            pw.deiconify()
+            w.destroy()
+
+        back_b = Button(f, fg='white', bg='#d30000', text='Back to Product Menu', command=iBack)
+        back_b.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
+
+        def remove():
+            mysql.deleteProduct(pid)
+            messagebox.showinfo('Deleted', 'A Product was removed.')
+            iBack()
+
+        delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Product', command=remove)
+        delete_b.grid(row=5, column=2, sticky=EW, padx=5, pady=5)
+
+        iw = Toplevel(root)
+
+        wpid_l = Label(iw, text='Product Code')
+        wpid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+        wpid_e = Entry(iw)
+        wpid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+
+        def enable():
+            c = mysql.getProduct(wpid_e.get())[0]
+            pid_l.configure(text=f'Product Code: {c[0]}')
+            nonlocal pid
+            pid = c[0]
+            title_e.insert(0, c[1])
+            mingrade_e.insert(0, c[2])
+            maxgrade_e.insert(0, c[3])
+            price_e.insert(0, c[4])
+            w.deiconify()
+            iw.destroy()
+
+        grab_b = Button(iw, fg='white', bg='#d33d00', text='Get Product to edit', command=enable)
+        grab_b.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+
+        def iiBack():
+            iw.destroy()
+            iBack()
+
+        ib_b = Button(iw, fg='white', bg='#d30000', text='Back to Product Menu', command=iiBack)
+        ib_b.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+
+        iw.update()
+        iw.focus_force()
+        iw.geometry(f'{iw.winfo_width()}x{iw.winfo_height()}+{(iw.winfo_screenwidth() - iw.winfo_width()) // 2}+{(iw.winfo_screenheight() - iw.winfo_height()) // 2}')
+
+        w.withdraw()
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -200,7 +403,7 @@ def openP():
     new_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Product', command=openI)
     new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
-    edit_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Product', command=lambda: print('ep'))  # mysql
+    edit_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Product', command=openE)
     edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
     def Back():
@@ -254,22 +457,123 @@ def openS():
         price_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5)
 
         def do():
+            if not pid_e.get().strip():
+                messagebox.showerror('Bad input', 'The product code cannot be blank')
+                return
+            if not cid_e.get().strip():
+                messagebox.showerror('Bad input', 'The customer code cannot be blank')
+                return
             mysql.insertSale(pid_e.get(), cid_e.get(), date_e.get(), price_e.get())
             pid_e.delete(0, END)
             cid_e.delete(0, END)
             date_e.delete(0, END)
             price_e.delete(0, END)
+            messagebox.showinfo('Created', 'A sale was made.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Create', command=do)
-        summit_b.grid(row=9, column=1, sticky=EW, padx=5, pady=5)
+        summit_b.grid(row=4, column=1, sticky=EW, padx=5, pady=5)
 
         def iBack():
             sw.deiconify()
             w.destroy()
 
         back_b = Button(f, fg='white', bg='#d30000', text='Back to Sales Menu', command=iBack)
-        back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
+        back_b.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
 
+        w.update()
+        w.focus_force()
+        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+
+    def openE():
+        sw.withdraw()
+        sid = None
+
+        w = Toplevel(sw)
+        w.title('Edit Existing Sale')
+        w.resizable(width=False, height=False)
+
+        f = Frame(w, bg='#808080')
+        f.grid()
+
+        sid_l = Label(f, text='Sale Code')
+        sid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5, columnspan=3)
+
+        pid_l = Label(f, text='Product Code')
+        pid_l.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+        pid_e = Entry(f)
+        pid_e.grid(row=1, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        cid_l = Label(f, text='Customer Code')
+        cid_l.grid(row=2, column=0, sticky=EW, padx=5, pady=5)
+        cid_e = Entry(f)
+        cid_e.grid(row=2, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        date_l = Label(f, text='Date Purchased')
+        date_l.grid(row=3, column=0, sticky=EW, padx=5, pady=5)
+        date_e = Entry(f)
+        date_e.grid(row=3, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        price_l = Label(f, text='Price Paid')
+        price_l.grid(row=4, column=0, sticky=EW, padx=5, pady=5)
+        price_e = Entry(f)
+        price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
+
+        def do():
+            mysql.updateSale(sid, pid_e.get(), cid_e.get(), date_e.get(), price_e.get())
+            messagebox.showinfo('Changed', 'A Sale was edited.')
+
+        summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
+        summit_b.grid(row=5, column=1, sticky=EW, padx=5, pady=5)
+
+        def iBack():
+            sw.deiconify()
+            w.destroy()
+
+        back_b = Button(f, fg='white', bg='#d30000', text='Back to Sales Menu', command=iBack)
+        back_b.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
+
+        def remove():
+            mysql.deleteSale(sid)
+            messagebox.showinfo('Deleted', 'A Sale was removed.')
+            iBack()
+
+        delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Sale', command=remove)
+        delete_b.grid(row=5, column=2, sticky=EW, padx=5, pady=5)
+
+        iw = Toplevel(root)
+
+        wsid_l = Label(iw, text='Sale Code')
+        wsid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+        wsid_e = Entry(iw)
+        wsid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+
+        def enable():
+            c = mysql.getSale(wsid_e.get())[0]
+            sid_l.configure(text=f'Sale Code: {c[0]}')
+            nonlocal sid
+            sid = c[0]
+            pid_e.insert(0, c[1])
+            cid_e.insert(0, c[2])
+            date_e.insert(0, c[3])
+            price_e.insert(0, c[4])
+            w.deiconify()
+            iw.destroy()
+
+        grab_b = Button(iw, fg='white', bg='#d33d00', text='Get Sale to edit', command=enable)
+        grab_b.grid(row=1, column=1, sticky=EW, padx=5, pady=5)
+
+        def iiBack():
+            iw.destroy()
+            iBack()
+
+        ib_b = Button(iw, fg='white', bg='#d30000', text='Back to Sales Menu', command=iiBack)
+        ib_b.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+
+        iw.update()
+        iw.focus_force()
+        iw.geometry(f'{iw.winfo_width()}x{iw.winfo_height()}+{(iw.winfo_screenwidth() - iw.winfo_width()) // 2}+{(iw.winfo_screenheight() - iw.winfo_height()) // 2}')
+
+        w.withdraw()
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -287,7 +591,7 @@ def openS():
     new_b = Button(sm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Sale', command=openI)
     new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
 
-    edit_b = Button(sm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Sale', command=lambda: print('es'))  # mysql
+    edit_b = Button(sm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Sale', command=openE)
     edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
     def Back():
@@ -327,13 +631,13 @@ def openR():
         tv = mysql.viewTable(what)
 
         fields = {
-            'Customers': ['customer code', 'first name', 'last name', 'email', 'phone', 'address', 'state', 'city', 'zipcode'],
-            'Products': ['product code', 'title', 'min grade', 'max grade', 'price'],
-            'Sales': ['product code', 'customer code', 'date', 'price paid']
+            'Customers': ['Customer Code', 'First Name', 'Last Name', 'Email', 'Phone', 'Address', 'State', 'City', 'Zipcode'],
+            'Products': ['Product code', 'Title', 'Min Grade', 'Max Grade', 'Price'],
+            'Sales': ['Sale code', 'Product code', 'Customer Code', 'Date', 'Price Paid']
         }[what]
 
         for i in range(len(fields)):
-            Label(f, relief='solid', bd=1, bg='#7F7F7F', text=fields[i]).grid(row=0, column=i, sticky=EW)
+            Label(f, relief='solid', bd=1, bg='#878787', text=fields[i]).grid(row=0, column=i, sticky=EW)
 
         for r in range(len(tv)):
             for c in range(len(tv[r])):
@@ -347,7 +651,7 @@ def openR():
         b_f = Frame(w, bg='#808080')
         b_f.grid(row=1, sticky=EW)
         b_f.grid_columnconfigure(0, weight=1)
-        back_b = Button(b_f, fg='white', bg='#d30000', text='Back to Sales Menu', command=iBack)
+        back_b = Button(b_f, fg='white', bg='#d30000', text='Back to Reports Menu', command=iBack)
         back_b.grid(pady=5)
 
         w.update()
