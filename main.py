@@ -1,6 +1,6 @@
 # Joe Olpin
 # Accounts Receivable
-# 8/30/2021 - 9/3/2021
+# 8/30/2021 - 9/10/2021
 
 from tkinter import *
 from tkinter import messagebox
@@ -92,7 +92,7 @@ def openC():
 
     def openE():
         cw.withdraw()
-        cid = None
+        cid = IntVar(cw, 1)
 
         w = Toplevel(cw)
         w.title('Edit Existing Customer')
@@ -145,7 +145,7 @@ def openC():
         zipcode_e.grid(row=8, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
 
         def do():
-            mysql.updateCustomer(cid, fname_e.get(), lname_e.get(), email_e.get(), phone_e.get(), address_e.get(), state_e.get(), city_e.get(), zipcode_e.get())
+            mysql.updateCustomer(cid.get(), fname_e.get(), lname_e.get(), email_e.get(), phone_e.get(), address_e.get(), state_e.get(), city_e.get(), zipcode_e.get())
             messagebox.showinfo('Changed', 'A customer was edited.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
@@ -159,25 +159,33 @@ def openC():
         back_b.grid(row=9, column=0, sticky=EW, padx=5, pady=5)
 
         def remove():
-            mysql.deleteCustomer(cid)
+            mysql.deleteCustomer(cid.get())
             messagebox.showinfo('Deleted', 'A customer was removed.')
             iBack()
 
         delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Customer', command=remove)
         delete_b.grid(row=9, column=2, sticky=EW, padx=5, pady=5)
 
+        w.withdraw()
+
         iw = Toplevel(root)
+
+        coptions = mysql.getOptions('Customers')
+        if not coptions:
+            iw.withdraw()
+            messagebox.showerror('Database Error', 'There are no customers to edit.')
+            iw.destroy()
+            iBack()
+            return
 
         wcid_l = Label(iw, text='Customer Code')
         wcid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wcid_e = Entry(iw)
-        wcid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+        wcid_m = OptionMenu(iw, cid, *coptions)  # todo good
+        wcid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
-            c = mysql.getCustomer(wcid_e.get())[0]
-            cid_l.configure(text=f'Customer Code: {wcid_e.get()}')
-            nonlocal cid
-            cid = c[0]
+            c = mysql.getCustomer(cid.get())
+            cid_l.configure(text=f'Customer Code: {c[0]}')
             fname_e.insert(0, c[1])
             lname_e.insert(0, c[2])
             email_e.insert(0, c[3])
@@ -203,7 +211,6 @@ def openC():
         iw.focus_force()
         iw.geometry(f'{iw.winfo_width()}x{iw.winfo_height()}+{(iw.winfo_screenwidth() - iw.winfo_width()) // 2}+{(iw.winfo_screenheight() - iw.winfo_height()) // 2}')
 
-        w.withdraw()
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -298,7 +305,7 @@ def openP():
 
     def openE():
         pw.withdraw()
-        pid = None
+        pid = IntVar(pw, 1)
 
         w = Toplevel(pw)
         w.title('Edit Existing Product')
@@ -331,7 +338,7 @@ def openP():
         price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
 
         def do():
-            mysql.updateProduct(pid, title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
+            mysql.updateProduct(pid.get(), title_e.get(), mingrade_e.get(), maxgrade_e.get(), price_e.get())
             messagebox.showinfo('Changed', 'A Product was edited.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
@@ -345,25 +352,33 @@ def openP():
         back_b.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
 
         def remove():
-            mysql.deleteProduct(pid)
+            mysql.deleteProduct(pid.get())
             messagebox.showinfo('Deleted', 'A Product was removed.')
             iBack()
 
         delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Product', command=remove)
         delete_b.grid(row=5, column=2, sticky=EW, padx=5, pady=5)
 
+        w.withdraw()
+
         iw = Toplevel(root)
+
+        coptions = mysql.getOptions('Products')
+        if not coptions:
+            iw.withdraw()
+            messagebox.showerror('Database Error', 'There are no products to edit.')
+            iw.destroy()
+            iBack()
+            return
 
         wpid_l = Label(iw, text='Product Code')
         wpid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wpid_e = Entry(iw)
-        wpid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+        wpid_m = Entry(iw, pid, *coptions)  # todo fix
+        wpid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
-            c = mysql.getProduct(wpid_e.get())[0]
+            c = mysql.getProduct(pid.get())
             pid_l.configure(text=f'Product Code: {c[0]}')
-            nonlocal pid
-            pid = c[0]
             title_e.insert(0, c[1])
             mingrade_e.insert(0, c[2])
             maxgrade_e.insert(0, c[3])
@@ -385,7 +400,6 @@ def openP():
         iw.focus_force()
         iw.geometry(f'{iw.winfo_width()}x{iw.winfo_height()}+{(iw.winfo_screenwidth() - iw.winfo_width()) // 2}+{(iw.winfo_screenheight() - iw.winfo_height()) // 2}')
 
-        w.withdraw()
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
@@ -486,7 +500,7 @@ def openS():
 
     def openE():
         sw.withdraw()
-        sid = None
+        sid = IntVar(sw, 1)
 
         w = Toplevel(sw)
         w.title('Edit Existing Sale')
@@ -519,7 +533,7 @@ def openS():
         price_e.grid(row=4, column=1, sticky=EW, padx=5, pady=5, columnspan=2)
 
         def do():
-            mysql.updateSale(sid, pid_e.get(), cid_e.get(), date_e.get(), price_e.get())
+            mysql.updateSale(sid.get(), pid_e.get(), cid_e.get(), date_e.get(), price_e.get())
             messagebox.showinfo('Changed', 'A Sale was edited.')
 
         summit_b = Button(f, fg='white', bg='#d33d00', text='Edit', command=do)
@@ -533,25 +547,33 @@ def openS():
         back_b.grid(row=5, column=0, sticky=EW, padx=5, pady=5)
 
         def remove():
-            mysql.deleteSale(sid)
+            mysql.deleteSale(sid.get())
             messagebox.showinfo('Deleted', 'A Sale was removed.')
             iBack()
 
         delete_b = Button(f, fg='white', bg='#d3d300', text='Delete Sale', command=remove)
         delete_b.grid(row=5, column=2, sticky=EW, padx=5, pady=5)
 
+        w.withdraw()
+
         iw = Toplevel(root)
+
+        coptions = mysql.getOptions('Sales')
+        if not coptions:
+            iw.withdraw()
+            messagebox.showerror('Database Error', 'There are no products to edit.')
+            iw.destroy()
+            iBack()
+            return
 
         wsid_l = Label(iw, text='Sale Code')
         wsid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wsid_e = Entry(iw)
-        wsid_e.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+        wsid_m = Entry(iw, sid, *coptions)  # todo fix
+        wsid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
-            c = mysql.getSale(wsid_e.get())[0]
+            c = mysql.getSale(sid.get())
             sid_l.configure(text=f'Sale Code: {c[0]}')
-            nonlocal sid
-            sid = c[0]
             pid_e.insert(0, c[1])
             cid_e.insert(0, c[2])
             date_e.insert(0, c[3])

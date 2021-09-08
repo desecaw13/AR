@@ -26,7 +26,7 @@ def getCustomer(cID):
 
     c = cur.execute(f'SELECT * FROM Customers WHERE cID = ?', (cID,))
 
-    return c.fetchall()
+    return c.fetchall()[0]
 
 
 def updateCustomer(cID, fName, lName, email, phone, address, state, city, zipcode):
@@ -73,7 +73,7 @@ def getProduct(pID):
 
     c = cur.execute(f'SELECT * FROM Products WHERE pID = ?', (pID,))
 
-    return c.fetchall()
+    return c.fetchall()[0]
 
 
 def updateProduct(pID, title, minGrade, maxGrade, price):
@@ -120,7 +120,7 @@ def getSale(sID):
 
     c = cur.execute(f'SELECT * FROM Sales WHERE sID = ?', (sID,))
 
-    return c.fetchall()
+    return c.fetchall()[0]
 
 
 def updateSale(sID, pID, cID, date, price):
@@ -154,6 +154,15 @@ def viewTable(table):
     view = cur.execute(f'SELECT * FROM {table}')
 
     return view.fetchall()
+
+
+def getOptions(table):  # todo split up?
+    cur = sqlite3.connect(dbName).cursor()
+
+    view = cur.execute(f'SELECT {table[0].lower()}ID FROM {table}')
+    options = view.fetchall()
+    
+    return [v[0] for v in options]
 
 
 con = sqlite3.connect(dbName)
