@@ -1,6 +1,6 @@
 # Joe Olpin
 # Accounts Receivable
-# 8/30/2021 - 9/10/2021
+# 8/30/2021 - 9/8/2021
 
 from tkinter import *
 from tkinter import messagebox
@@ -10,16 +10,16 @@ import mysql
 def openC():
     root.withdraw()
 
-    cw = Toplevel(root)
+    cw = Toplevel(root, bg='#808080')
     cw.title('Customers')
     cw.grid_columnconfigure(0, weight=1)
 
     def openI():
         cw.withdraw()
 
-        w = Toplevel(cw)
+        w = Toplevel(cw, bg='#808080')
         w.title('Create New Customer')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -89,14 +89,15 @@ def openC():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     def openE():
         cw.withdraw()
         cid = IntVar(cw, 1)
 
-        w = Toplevel(cw)
+        w = Toplevel(cw, bg='#808080')
         w.title('Edit Existing Customer')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -168,7 +169,8 @@ def openC():
 
         w.withdraw()
 
-        iw = Toplevel(root)
+        iw = Toplevel(root, bg='#808080')
+        iw.resizable(width=False, height=False)
 
         coptions = mysql.getOptions('Customers')
         if not coptions:
@@ -180,7 +182,8 @@ def openC():
 
         wcid_l = Label(iw, text='Customer Code')
         wcid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wcid_m = OptionMenu(iw, cid, *coptions)  # todo good
+        wcid_m = OptionMenu(iw, cid, *coptions)
+        #wcid_m.config(bd=0)
         wcid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -214,6 +217,7 @@ def openC():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     ct_f = Frame(cw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     ct_f.grid_columnconfigure(0, weight=1)
@@ -226,17 +230,17 @@ def openC():
     cm_f.grid(row=1, column=0)
 
     new_b = Button(cm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Customer', command=openI)
-    new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+    new_b.grid(row=0, column=0, padx=5, pady=5)
 
     edit_b = Button(cm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Customer', command=openE)
-    edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    edit_b.grid(row=0, column=1, padx=5, pady=5)
 
     def Back():
         root.deiconify()
         cw.destroy()
 
     ce_b = Button(cm_f, fg='white', bg='#d30000', width=20, height=3, text='Return to Menu', command=Back)
-    ce_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
+    ce_b.grid(row=1, columnspan=2, padx=5, pady=5)
 
     cw.update()
     cw.focus_force()
@@ -247,16 +251,16 @@ def openC():
 def openP():
     root.withdraw()
 
-    pw = Toplevel(root)
+    pw = Toplevel(root, bg='#808080')
     pw.title('Products')
     pw.grid_columnconfigure(0, weight=1)
 
     def openI():
         pw.withdraw()
 
-        w = Toplevel(pw)
+        w = Toplevel(pw, bg='#808080')
         w.title('Create New Product')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -302,14 +306,15 @@ def openP():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     def openE():
         pw.withdraw()
         pid = IntVar(pw, 1)
 
-        w = Toplevel(pw)
+        w = Toplevel(pw, bg='#808080')
         w.title('Edit Existing Product')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -361,7 +366,8 @@ def openP():
 
         w.withdraw()
 
-        iw = Toplevel(root)
+        iw = Toplevel(root, bg='#808080')
+        iw.resizable(width=False, height=False)
 
         coptions = mysql.getOptions('Products')
         if not coptions:
@@ -373,7 +379,8 @@ def openP():
 
         wpid_l = Label(iw, text='Product Code')
         wpid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wpid_m = Entry(iw, pid, *coptions)  # todo fix
+        wpid_m = OptionMenu(iw, pid, *coptions)
+        #wpid_m.config(bd=0)
         wpid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -403,6 +410,7 @@ def openP():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     pt_f = Frame(pw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     pt_f.grid_columnconfigure(0, weight=1)
@@ -415,17 +423,17 @@ def openP():
     pm_f.grid(row=1, column=0)
 
     new_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Product', command=openI)
-    new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+    new_b.grid(row=0, column=0, padx=5, pady=5)
 
     edit_b = Button(pm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Product', command=openE)
-    edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    edit_b.grid(row=0, column=1, padx=5, pady=5)
 
     def Back():
         root.deiconify()
         pw.destroy()
 
     pe_b = Button(pm_f, fg='white', bg='#d30000', width=20, height=3, text='Return to Menu', command=Back)
-    pe_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
+    pe_b.grid(row=1, columnspan=2, padx=5, pady=5)
 
     pw.update()
     pw.focus_force()
@@ -436,16 +444,16 @@ def openP():
 def openS():
     root.withdraw()
 
-    sw = Toplevel(root)
+    sw = Toplevel(root, bg='#808080')
     sw.title('Sales')
     sw.grid_columnconfigure(0, weight=1)
 
     def openI():
         sw.withdraw()
 
-        w = Toplevel(sw)
+        w = Toplevel(sw, bg='#808080')
         w.title('Create New Sale')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -497,14 +505,15 @@ def openS():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     def openE():
         sw.withdraw()
         sid = IntVar(sw, 1)
 
-        w = Toplevel(sw)
+        w = Toplevel(sw, bg='#808080')
         w.title('Edit Existing Sale')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
         f = Frame(w, bg='#808080')
         f.grid()
@@ -556,7 +565,8 @@ def openS():
 
         w.withdraw()
 
-        iw = Toplevel(root)
+        iw = Toplevel(root, bg='#808080')
+        iw.resizable(width=False, height=False)
 
         coptions = mysql.getOptions('Sales')
         if not coptions:
@@ -568,7 +578,8 @@ def openS():
 
         wsid_l = Label(iw, text='Sale Code')
         wsid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
-        wsid_m = Entry(iw, sid, *coptions)  # todo fix
+        wsid_m = OptionMenu(iw, sid, *coptions)
+        #wsid_m.config(bd=0)
         wsid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -599,6 +610,7 @@ def openS():
         w.update()
         w.focus_force()
         w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w.minsize(width=w.winfo_width(), height=w.winfo_height())
 
     st_f = Frame(sw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     st_f.grid_columnconfigure(0, weight=1)
@@ -611,17 +623,17 @@ def openS():
     sm_f.grid(row=1, column=0)
 
     new_b = Button(sm_f, fg='white', bg='#d33d00', width=20, height=3, text='Enter New Sale', command=openI)
-    new_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+    new_b.grid(row=0, column=0, padx=5, pady=5)
 
     edit_b = Button(sm_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit Existing Sale', command=openE)
-    edit_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    edit_b.grid(row=0, column=1, padx=5, pady=5)
 
     def Back():
         root.deiconify()
         sw.destroy()
 
     se_b = Button(sm_f, fg='white', bg='#d30000', width=20, height=3, text='Return to Menu', command=Back)
-    se_b.grid(row=1, columnspan=2, sticky=EW, padx=5, pady=5)
+    se_b.grid(row=1, columnspan=2, padx=5, pady=5)
 
     sw.update()
     sw.focus_force()
@@ -632,23 +644,31 @@ def openS():
 def openR():
     root.withdraw()
 
-    rw = Toplevel(root)
+    rw = Toplevel(root, bg='#808080')
     rw.title('Views')
     rw.grid_columnconfigure(0, weight=1)
 
     def openV(what):
         rw.withdraw()
 
-        w = Toplevel(rw)
+        w = Toplevel(rw, bg='#808080')
         w.title(f'Viewing {what}')
-        w.resizable(width=False, height=False)
+        w.grid_columnconfigure(0, weight=1)
 
-        f_f = Frame(w, bg='#808080')
-        f_f.grid(ipadx=5, ipady=5)
-        f_f.grid_columnconfigure(0, weight=1)
-        f_f.grid_rowconfigure(0, weight=1)
-        f = Frame(f_f, bg='#808080', bd=1, relief='solid')
+        f_c = Frame(w, bg='#808080')  # 455, 1000
+        f_c.grid(row=1, ipadx=5, ipady=5, sticky=EW)
+        f_c.grid_columnconfigure(0, weight=1)
+        f_c.grid_rowconfigure(0, weight=1)
+
+        f = Canvas(f_c, bg='#808080', bd=1, relief='solid', width=450, height=300, scrollregion=(0, 0, 900, 600))  # 430, 1000 | 430, 256
         f.grid()
+
+        s = Scrollbar(f_c, orient=VERTICAL)
+        s.grid(row=0, column=1, sticky=NS)
+
+        s.config(command=f.yview)
+        f.config(yscrollcommand=s.set)
+        # ^ todo https://tkdocs.com/shipman/connecting-scrollbars.html
 
         tv = mysql.viewTable(what)
 
@@ -671,14 +691,16 @@ def openR():
             w.destroy()
 
         b_f = Frame(w, bg='#808080')
-        b_f.grid(row=1, sticky=EW)
+        b_f.grid(row=2, sticky=EW)
         b_f.grid_columnconfigure(0, weight=1)
         back_b = Button(b_f, fg='white', bg='#d30000', text='Back to Reports Menu', command=iBack)
         back_b.grid(pady=5)
 
         w.update()
         w.focus_force()
-        w.geometry(f'{w.winfo_width()}x{w.winfo_height()}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w.winfo_height()) // 2}')
+        w_height = w.winfo_height() if w.winfo_height()+20 < w.winfo_screenheight() else w.winfo_screenheight()//3
+        w.geometry(f'{w.winfo_width()}x{w_height}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w_height) // 2}')
+        w.minsize(width=w.winfo_width(), height=1)
 
     rt_f = Frame(rw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     rt_f.grid_columnconfigure(0, weight=1)
@@ -691,19 +713,19 @@ def openR():
     rm_f.grid(row=1, column=0)
 
     cr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Customers', command=lambda: openV('Customers'))
-    cr_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+    cr_b.grid(row=0, column=0, padx=5, pady=5)
 
     pr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Products', command=lambda: openV('Products'))
-    pr_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    pr_b.grid(row=0, column=1, padx=5, pady=5)
 
     sr_b = Button(rm_f, fg='white', bg='#d33d00', width=20, height=3, text='Sales', command=lambda: openV('Sales'))
-    sr_b.grid(row=0, column=2, sticky=EW, padx=5, pady=5)
+    sr_b.grid(row=0, column=2, padx=5, pady=5)
 
     def Back():
         root.deiconify()
         rw.destroy()
 
-    re_b = Button(rm_f, fg='white', bg='#d30000', width=20, height=3, text='Return to Menu', command=Back)
+    re_b = Button(rm_f, fg='white', bg='#d30000', height=3, text='Return to Menu', command=Back)
     re_b.grid(row=1, columnspan=3, sticky=EW, padx=5, pady=5)
 
     rw.update()
@@ -711,9 +733,15 @@ def openR():
     rw.geometry(f'{rw.winfo_width()}x{rw.winfo_height()}+{(rw.winfo_screenwidth() - rw.winfo_width()) // 2}+{(rw.winfo_screenheight() - rw.winfo_height()) // 2}')
     rw.minsize(width=rw.winfo_width(), height=rw.winfo_height())
 
+    '''DGS needs the following features of their database:
+        1) Customer Report
+        2) Product Sales History
+        3) Product Marketing Schedule'''  # todo
+
 
 if __name__ == '__main__':
     root = Tk()
+    root.config(bg='#808080')
     root.title('Accounts Receivable')
     root.grid_columnconfigure(0, weight=1)
 
@@ -727,22 +755,20 @@ if __name__ == '__main__':
     menu_f = Frame(root, bg='#808080')
     menu_f.grid(row=1, column=0)
 
-    customers_b = Button(menu_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit / Enter Customers',
-                         command=openC)
-    customers_b.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
+    customers_b = Button(menu_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit / Enter Customers', command=openC)
+    customers_b.grid(row=0, column=0, padx=5, pady=5)
 
-    products_b = Button(menu_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit / Enter Products',
-                        command=openP)
-    products_b.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
+    products_b = Button(menu_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit / Enter Products', command=openP)
+    products_b.grid(row=0, column=1, padx=5, pady=5)
 
     sales_b = Button(menu_f, fg='white', bg='#d33d00', width=20, height=3, text='Edit / Enter Sales', command=openS)
-    sales_b.grid(row=0, column=2, sticky=EW, padx=5, pady=5)
+    sales_b.grid(row=0, column=2, padx=5, pady=5)
 
     reports_b = Button(menu_f, fg='white', bg='#A14C4C', width=20, height=3, text='Reports', command=openR)
-    reports_b.grid(row=1, column=0, sticky=EW, padx=5, pady=5)
+    reports_b.grid(row=1, column=0, padx=5, pady=5)
 
     exit_b = Button(menu_f, fg='white', bg='#d30000', width=20, height=3, text='Exit', command=root.destroy)
-    exit_b.grid(row=1, column=2, sticky=EW, padx=5, pady=5)
+    exit_b.grid(row=1, column=2, padx=5, pady=5)
 
     root.update()
     root.geometry(f'{root.winfo_width()}x{root.winfo_height()}+{(root.winfo_screenwidth() - root.winfo_width()) // 2}+{(root.winfo_screenheight() - root.winfo_height()) // 2}')
