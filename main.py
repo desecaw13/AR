@@ -183,7 +183,7 @@ def openC():
         wcid_l = Label(iw, text='Customer Code')
         wcid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
         wcid_m = OptionMenu(iw, cid, *coptions)
-        #wcid_m.config(bd=0)
+        wcid_m.config(bd=0)
         wcid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -380,7 +380,7 @@ def openP():
         wpid_l = Label(iw, text='Product Code')
         wpid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
         wpid_m = OptionMenu(iw, pid, *coptions)
-        #wpid_m.config(bd=0)
+        wpid_m.config(bd=0)
         wpid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -579,7 +579,7 @@ def openS():
         wsid_l = Label(iw, text='Sale Code')
         wsid_l.grid(row=0, column=0, sticky=EW, padx=5, pady=5)
         wsid_m = OptionMenu(iw, sid, *coptions)
-        #wsid_m.config(bd=0)
+        wsid_m.config(bd=0)
         wsid_m.grid(row=0, column=1, sticky=EW, padx=5, pady=5)
 
         def enable():
@@ -654,21 +654,29 @@ def openR():
         w = Toplevel(rw, bg='#808080')
         w.title(f'Viewing {what}')
         w.grid_columnconfigure(0, weight=1)
+        w.grid_rowconfigure(0, weight=1)
 
-        f_c = Frame(w, bg='#808080')  # 455, 1000
-        f_c.grid(row=1, ipadx=5, ipady=5, sticky=EW)
-        f_c.grid_columnconfigure(0, weight=1)
-        f_c.grid_rowconfigure(0, weight=1)
+        f_f = Frame(w, bg='#808080')
+        f_f.grid(row=0, ipadx=5, ipady=5, sticky=E+W+N+S)
+        f_f.grid_columnconfigure(0, weight=1)
+        f_f.grid_rowconfigure(0, weight=1)
 
-        f = Canvas(f_c, bg='#808080', bd=1, relief='solid', width=450, height=300, scrollregion=(0, 0, 900, 600))  # 430, 1000 | 430, 256
-        f.grid()
+        canvas = Canvas(f_f, bg='#808080', bd=1, relief='solid', highlightthickness=0)
+        canvas.grid(sticky=E+W+N+S)
+        c_f = Frame(canvas, bg='#808080')
 
-        s = Scrollbar(f_c, orient=VERTICAL)
+        s = Scrollbar(f_f, orient=VERTICAL)
         s.grid(row=0, column=1, sticky=NS)
 
-        s.config(command=f.yview)
-        f.config(yscrollcommand=s.set)
-        # ^ todo https://tkdocs.com/shipman/connecting-scrollbars.html
+        s.config(command=canvas.yview)
+        canvas.config(yscrollcommand=s.set)
+
+        def onConfig(event):
+            print(event,w.bbox('all'))
+            canvas.config(scrollregion=canvas.bbox('all'))
+        c_f.bind('<Configure>', onConfig)
+
+        canvas.create_window(1, 1, window=c_f, anchor=NW)
 
         tv = mysql.viewTable(what)
 
@@ -679,28 +687,29 @@ def openR():
         }[what]
 
         for i in range(len(fields)):
-            Label(f, relief='solid', bd=1, bg='#878787', text=fields[i]).grid(row=0, column=i, sticky=EW)
+            Label(c_f, relief='solid', bd=1, bg='#878787', text=fields[i]).grid(row=0, column=i, sticky=EW)
 
         for r in range(len(tv)):
             for c in range(len(tv[r])):
                 bg = '#A0A0A0' if r % 2 == 0 else '#606060'
-                Label(f, relief='solid', bd=1, bg=bg, text=tv[r][c]).grid(row=r+1, column=c, sticky=EW)
+                Label(c_f, relief='solid', bd=1, bg=bg, text=tv[r][c]).grid(row=r+1, column=c, sticky=EW)
 
         def iBack():
             rw.deiconify()
             w.destroy()
 
         b_f = Frame(w, bg='#808080')
-        b_f.grid(row=2, sticky=EW)
+        b_f.grid(row=1, sticky=EW)
         b_f.grid_columnconfigure(0, weight=1)
         back_b = Button(b_f, fg='white', bg='#d30000', text='Back to Reports Menu', command=iBack)
         back_b.grid(pady=5)
 
         w.update()
         w.focus_force()
-        w_height = w.winfo_height() if w.winfo_height()+20 < w.winfo_screenheight() else w.winfo_screenheight()//3
-        w.geometry(f'{w.winfo_width()}x{w_height}+{(w.winfo_screenwidth() - w.winfo_width()) // 2}+{(w.winfo_screenheight() - w_height) // 2}')
-        w.minsize(width=w.winfo_width(), height=1)
+        w_width = c_f.winfo_width()+(w.winfo_width()-canvas.winfo_width())+2
+        w_height = w.winfo_height() if w.winfo_height()+20 < w.winfo_screenheight() else w.winfo_screenheight()//2
+        w.geometry(f'{w_width}x{w_height}+{(w.winfo_screenwidth() - w_width) // 2}+{(w.winfo_screenheight() - w_height) // 2}')
+        w.minsize(width=w_width, height=1)
 
     rt_f = Frame(rw, bg='#3D3D3D', highlightbackground='gray', highlightthickness=5)
     rt_f.grid_columnconfigure(0, weight=1)
@@ -732,11 +741,6 @@ def openR():
     rw.focus_force()
     rw.geometry(f'{rw.winfo_width()}x{rw.winfo_height()}+{(rw.winfo_screenwidth() - rw.winfo_width()) // 2}+{(rw.winfo_screenheight() - rw.winfo_height()) // 2}')
     rw.minsize(width=rw.winfo_width(), height=rw.winfo_height())
-
-    '''DGS needs the following features of their database:
-        1) Customer Report
-        2) Product Sales History
-        3) Product Marketing Schedule'''  # todo
 
 
 if __name__ == '__main__':
