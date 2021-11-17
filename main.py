@@ -1,6 +1,3 @@
-# Joe Olpin
-# Accounts Receivable
-# 8/30/2021 - 9/8/2021
 
 from tkinter import *
 from tkinter import messagebox
